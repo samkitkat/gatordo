@@ -1,0 +1,22 @@
+import React from "react";
+import { FaGithub } from "react-icons/fa";
+
+export default function Footer() {
+  return (
+    <footer className="footer">
+      <p>
+        created using <strong>vite</strong>, <strong>react</strong>, &{" "}
+        <strong>supabase</strong>
+      </p>
+      <a
+        href="https://github.com/samkitkat"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="github-link"
+        title="View on GitHub"
+      >
+        <FaGithub />
+      </a>
+    </footer>
+  );
+}

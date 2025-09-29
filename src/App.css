@@ -1,0 +1,259 @@
+/* 
+  Colors and fonts based on SFSU brand guidelines.
+
+  Primary Colors:
+    Dark Purple: #442C8B
+    Medium Purple: #665AA7
+    Light Purple: #B1A5D0
+    Dark Gold: #DCAE27
+    Medium Gold: #FFD24f
+    Light Gold: #FFEC82
+
+  Secondary Colors:
+    #044361, #005755, #CC4D35, #EB8923, #6E5D53,
+    #70B3D7, #79C9AE, #FAC4Cb, #FFE2B4, #F6F0D6, #000000
+
+  Typeface:
+    Secondary Typeface: Source Sans 3
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: "Source Sans 3", sans-serif;
+  background-color: #f6f0d6;
+  color: #000000;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 640px;
+  min-height: 100%;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1,
+h2 {
+  color: #442c8b;
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+.border {
+  border-bottom: 3px solid #dcae27;
+  padding-bottom: 0.3rem;
+  margin: 1rem 0 1rem 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.datetime {
+  text-align: right;
+  color: #442c8b;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.datetime .date {
+  font-weight: bold;
+}
+
+.datetime .time {
+  font-size: 1.5rem;
+  color: #442c8b; /* darker purple for contrast */
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  color: #665aa7;
+}
+
+input {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #b1a5d0;
+  border-radius: 6px;
+  flex: 1;
+  font-size: 1rem;
+}
+
+button.signIn {
+  background-color: #442c8b;
+  color: #fff;
+  width: 145px;
+  margin-left: 10px;
+}
+
+.signOutButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button.signOut {
+  background-color: #442c8b;
+  color: #fff;
+  width: 145px;
+  justify-content: center;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button svg {
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+.todo-item > div {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.todo-item > .actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+/* Button variants */
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button.add {
+  background-color: #442c8b;
+  color: #fff;
+}
+
+button.ip {
+  background-color: #ffd24f;
+  color: #000;
+}
+
+button.complete {
+  background-color: #79c9ae;
+  color: #000;
+}
+
+button.update {
+  background-color: #70b3d7;
+  color: #000;
+}
+
+button.delete {
+  background-color: #cc4d35;
+  color: #fff;
+}
+
+/* Todo item styling */
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #b1a5d0;
+  border-left: 6px solid #442c8b;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item span {
+  flex: 1;
+}
+
+/* Status-based accents */
+.todo-incomplete {
+  border-left-color: #dcae27;
+}
+
+.todo-in-progress {
+  border-left-color: #eb8923;
+}
+
+.todo-completed {
+  border-left-color: #79c9ae;
+  text-decoration: line-through;
+  color: #6e5d53;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 2px solid #b1a5d0; /* light purple border */
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.footer {
+  margin-top: auto;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #442c8b;
+  background-color: #dcae27;
+  padding: 3rem;
+
+  display: block;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: center;
+}
+
+.footer .github-link {
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+  color: #442c8b;
+  text-decoration: none;
+}
+
+/* 🐊 burst animation */
+@keyframes gator-pop {
+  0% {
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+.gator-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 18px;
+  animation: gator-pop 1500ms ease-out forwards;
+  will-change: transform, opacity;
+}
