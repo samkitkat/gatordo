@@ -1,16 +1,25 @@
-# React + Vite
+# 🐊 GatorDo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GatorDo is a Todo app built with **Vite**, **React**, and **Supabase**, and deployed on **Netlify**.  
+It was designed as a lightweight project to practice full-stack app development with authentication, a database, and deployment tools.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
+- Add, edit, delete todos
+- Track status: **incomplete**, **in progress**, or **completed**
+- Inline editing of tasks
+- Fun 🐊 emoji confetti when marking a task complete
+- Auth:
+  - **Magic link login** (email OTP)
+  - **Guest mode** (anonymous)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Services & Tech Stack
+- **[React](https://react.dev/)** (UI framework)  
+- **[Vite](https://vitejs.dev/)** (build tool)  
+- **[Supabase](https://supabase.com/)** (database)  
+- **[Netlify](https://www.netlify.com/)** (hosting + deployment)  
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---

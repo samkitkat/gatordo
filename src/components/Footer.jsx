@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <p>
         created using <strong>vite</strong>, <strong>react</strong>, &{" "}
-        <strong>supabase</strong>
+        <strong>supabase</strong> | deployed with <strong>netlify</strong>
       </p>
       <a
         href="https://github.com/samkitkat"
