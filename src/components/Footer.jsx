@@ -6,10 +6,11 @@ export default function Footer() {
     <footer className="footer">
       <p>
         created using <strong>vite</strong>, <strong>react</strong>, &{" "}
-        <strong>supabase</strong> | deployed with <strong>netlify</strong>
+        <strong>supabase</strong>
       </p>
+      <p>deployed with <strong>netlify</strong></p>
       <a
-        href="https://github.com/samkitkat"
+        href="https://github.com/samkitkat/gatordo"
         target="_blank"
         rel="noopener noreferrer"
         className="github-link"
