@@ -10,4 +10,3 @@ if (!supabaseUrl || !supabaseAnonKey) {
   
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   export default supabase;
- 

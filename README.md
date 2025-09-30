@@ -21,5 +21,3 @@ It was designed as a lightweight project to practice full-stack app development 
 - **[Vite](https://vitejs.dev/)** (build tool)  
 - **[Supabase](https://supabase.com/)** (database)  
 - **[Netlify](https://www.netlify.com/)** (hosting + deployment)  
-
----

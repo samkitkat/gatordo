@@ -63,6 +63,7 @@ export default function YourTodoApp({ user }) {
     if (!error) fetchTodos();
   }
 
+  //GATOR CONFETTI curtesy of chatgpt
   function gatorBurst(x, y) {
     const count = 10; // number of gators
     for (let i = 0; i < count; i++) {
@@ -87,11 +88,10 @@ export default function YourTodoApp({ user }) {
       span.addEventListener("animationend", () => span.remove());
     }
   }
-
   function handleCelebrateFromEvent(e) {
-    // account for scroll by using client coords
     gatorBurst(e.clientX, e.clientY);
   }
+  //GATOR CONFETTI
 
   return (
     <div className="container">
@@ -111,7 +111,7 @@ export default function YourTodoApp({ user }) {
 
       <h3>✍🏼 todos</h3>
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+      <div className="inputContainer">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -148,8 +148,6 @@ export default function YourTodoApp({ user }) {
         onStatusChange={updateStatus}
         onCelebrate={handleCelebrateFromEvent}
       />
-
-      <div className="border"></div>
 
       <Footer />
     </div>

@@ -2,16 +2,17 @@
   Colors and fonts based on SFSU brand guidelines.
 
   Primary Colors:
-    Dark Purple: #442C8B
-    Medium Purple: #665AA7
-    Light Purple: #B1A5D0
-    Dark Gold: #DCAE27
-    Medium Gold: #FFD24f
-    Light Gold: #FFEC82
+    Core Purple: #442C8B
+    Purple #2: #665AA7
+    Purple #3: #B1A5D0
+    Core Gold: #DCAE27
+    Gold #2: #FFD24f
+    Gold #3: #FFEC82
 
   Secondary Colors:
-    #044361, #005755, #CC4D35, #EB8923, #6E5D53,
-    #70B3D7, #79C9AE, #FAC4Cb, #FFE2B4, #F6F0D6, #000000
+    Ocean: #044361, Forest: #005755, Bridge: #CC4D35, Sunset: #EB8923, Rock: #6E5D53,
+    Sky: #70B3D7, Eucalyptus: #79C9AE, Stucco: #FAC4Cb, Sunlight: #FFE2B4, Fog: #F6F0D6, 
+    Black: #000000
 
   Typeface:
     Secondary Typeface: Source Sans 3
@@ -74,7 +75,7 @@ h1 {
 
 .datetime .time {
   font-size: 1.5rem;
-  color: #442c8b; /* darker purple for contrast */
+  color: #442c8b;
 }
 
 h3 {
@@ -89,6 +90,31 @@ input {
   border-radius: 6px;
   flex: 1;
   font-size: 1rem;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.emailForm {
+  display: flex;
+  gap: 8;
+  align-items: center;
+}
+
+.login-message {
+  background-color: #FFEC82;
+}
+
+.guestButton {
+  display: flex;
+  margin-top: 20px;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 button.signIn {
