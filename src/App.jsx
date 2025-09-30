@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
 import supabase from "./helper/supabaseClient";
 import MagicLinkForm from "./MagicLinkForm";
 import YourTodoApp from "./pages/YourTodoApp";
+import "./App.css";
 
 export default function App() {
   const [session, setSession] = useState(null);

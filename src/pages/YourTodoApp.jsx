@@ -106,7 +106,6 @@ export default function YourTodoApp({ user }) {
       </div>
 
       <div className="border"></div>
-
       <Header now={now} />
 
       <h3>✍🏼 todos</h3>
@@ -150,6 +149,7 @@ export default function YourTodoApp({ user }) {
       />
 
       <Footer />
+      
     </div>
   );
 }

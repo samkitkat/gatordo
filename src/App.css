@@ -109,9 +109,8 @@ input {
   background-color: #FFEC82;
 }
 
-.guestButton {
+.guestLogin {
   display: flex;
-  margin-top: 20px;
   justify-content: flex-start;
   flex-direction: column;
   align-items: flex-end;

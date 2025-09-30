@@ -24,6 +24,7 @@ export default function Footer() {
           <FaGithub />
         </a>
       </footer>
+      
     </div>
   );
 }

@@ -41,7 +41,6 @@ function MagicLinkForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ flex: 1 }}
         />
         <button type="submit" className="signIn">
           Send Magic Link
@@ -50,15 +49,17 @@ function MagicLinkForm() {
 
       {message && <p className="login-message">{message}</p>}
 
-      <div className="guestButton">
+      <div className="guestLogin">
         <h2>OR</h2>
-        <div style={{ marginTop: 16, textAlign: "center" }}>
+        <div>
           <button className="signIn" onClick={continueAsGuest}>
             Continue as guest
           </button>
         </div>
       </div>
+
       <Footer />
+
     </div>
   );
 }
