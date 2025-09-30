@@ -1,6 +1,6 @@
 # 🐊 GatorDo
 
-GatorDo is a Todo app built with **Vite**, **React**, and **Supabase**, and deployed on **Netlify**.  
+[GatorDo](https://gatordo.netlify.app) is a Todo app built with **Vite**, **React**, and **Supabase**, and deployed on **Netlify**.  
 It was designed as a lightweight project to practice full-stack app development with authentication, a database, and deployment tools.
 
 ---
