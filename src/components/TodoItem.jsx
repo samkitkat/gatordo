@@ -5,7 +5,10 @@ function formatDateTime(iso) {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  return d.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 }
 
 export default function TodoItem({
@@ -33,8 +36,10 @@ export default function TodoItem({
   ].filter(Boolean);
 
   return (
-    <div className={`todo-item todo-${todo.status.replace(" ", "-")}`}
-    title={tooltipLines.join("\n")}>
+    <div
+      className={`todo-item todo-${todo.status.replace(" ", "-")}`}
+      title={tooltipLines.join("\n")}
+    >
       {isEditing ? (
         <input
           className="edit-input"
