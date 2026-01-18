@@ -8,11 +8,7 @@ export default function Footer() {
 
       <footer className="footer">
         <p>
-          created using <strong>vite</strong>, <strong>react</strong>, &{" "}
-          <strong>supabase</strong>
-        </p>
-        <p>
-          deployed with <strong>netlify</strong>
+          created using vite, react, & supabase. deployed with netlify.
         </p>
         <a
           href="https://github.com/samkitkat/gatordo"

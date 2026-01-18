@@ -6,15 +6,51 @@ import "./App.css";
 
 export default function App() {
   const [session, setSession] = useState(null);
+  const [authOpen, setAuthOpen] = useState(false);
+
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, sess) =>
-      setSession(sess)
-    );
-    return () => listener.subscription.unsubscribe();
+    document.body.style.overflow = authOpen ? "hidden" : "";
+    return () => (document.body.style.overflow = "");
+  }, [authOpen]);
+  
+
+  useEffect(() => {
+    let subscription;
+
+    // Protect against supabase being misconfigured / unavailable
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        setSession(data.session);
+
+        const { data: listener } = supabase.auth.onAuthStateChange(
+          (_event, sess) => setSession(sess)
+        );
+
+        subscription = listener.subscription;
+      } catch (e) {
+        // If Supabase is down/paused/misconfigured, we still want the app to load in guest mode
+        console.warn("Supabase auth unavailable; continuing in guest mode.", e);
+      }
+    })();
+
+    return () => subscription?.unsubscribe?.();
   }, []);
 
-  if (!session) return <MagicLinkForm />;
-  return <YourTodoApp user={session.user} />;
+  const user = session?.user ?? null;
+
+  return (
+    <>
+      <YourTodoApp
+        user={user}
+        onOpenAuth={() => setAuthOpen(true)}
+        onCloseAuth={() => setAuthOpen(false)}
+      />
+
+      {authOpen && !user && (
+        <MagicLinkForm onClose={() => setAuthOpen(false)} />
+      )}
+    </>
+  );
 }

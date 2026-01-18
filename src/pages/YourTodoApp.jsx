@@ -1,83 +1,210 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import supabase from "../helper/supabaseClient";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TodoList from "../components/TodoList";
 import { FaPlus } from "react-icons/fa";
 
-export default function YourTodoApp({ user }) {
+function safeUUID() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [now, setNow] = useState(new Date());
+
+  // "supabase" or "local"
+  const [mode, setMode] = useState("local");
+  const [cloudWarning, setCloudWarning] = useState("");
+
+  const storageKey = useMemo(() => {
+    // Keep separate buckets so people can sign in later without losing guest todos
+    return user?.id ? `gatordo.todos.${user.id}` : "gatordo.todos.guest";
+  }, [user?.id]);
+
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      setTodos(Array.isArray(parsed) ? parsed : []);
+    } catch (e) {
+      console.warn("Failed to load local todos", e);
+      setTodos([]);
+    }
+  }
+
+  function saveLocal(nextTodos) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(nextTodos));
+    } catch (e) {
+      console.warn("Failed to save local todos", e);
+    }
+  }
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // Decide mode + initial load
   useEffect(() => {
-    fetchTodos();
-  }, []);
+    setCloudWarning("");
+
+    if (!user?.id) {
+      setMode("local");
+      loadLocal();
+      return;
+    }
+
+    // If signed in, try Supabase first. If it fails, fall back to local.
+    (async () => {
+      const ok = await tryFetchFromSupabase();
+      if (ok) {
+        setMode("supabase");
+      } else {
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+        loadLocal();
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, storageKey]);
+
+  async function tryFetchFromSupabase() {
+    try {
+      const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      setTodos(data || []);
+      return true;
+    } catch (e) {
+      console.warn("Supabase fetch failed", e);
+      return false;
+    }
+  }
 
   async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: true });
-    if (!error) setTodos(data || []);
-    else console.error(error);
+    if (mode === "supabase" && user?.id) {
+      const ok = await tryFetchFromSupabase();
+      if (!ok) {
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+        loadLocal();
+      }
+      return;
+    }
+
+    loadLocal();
   }
 
   async function addTodo() {
     if (!title.trim()) return;
-    const { error } = await supabase
-      .from("todos")
-      .insert([{ title, status: "incomplete", user_id: user.id }]);
-    if (!error) {
-      setTitle("");
-      fetchTodos();
-    } else {
-      console.error(error);
+
+    if (mode === "supabase" && user?.id) {
+      try {
+        const { error } = await supabase
+          .from("todos")
+          .insert([{ title, status: "incomplete", user_id: user.id }]);
+
+        if (error) throw error;
+
+        setTitle("");
+        fetchTodos();
+        return;
+      } catch (e) {
+        console.warn("Supabase add failed; switching to local.", e);
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+        // fall through to local add
+      }
     }
+
+    const next = [
+      ...todos,
+      { id: safeUUID(), title, status: "incomplete", user_id: user?.id ?? null },
+    ];
+    setTodos(next);
+    saveLocal(next);
+    setTitle("");
   }
 
   async function updateTodo(id, newTitle) {
-    const { error } = await supabase
-      .from("todos")
-      .update({ title: newTitle })
-      .eq("id", id);
-    if (!error) fetchTodos();
+    if (mode === "supabase" && user?.id) {
+      try {
+        const { error } = await supabase.from("todos").update({ title: newTitle }).eq("id", id);
+        if (error) throw error;
+        fetchTodos();
+        return;
+      } catch (e) {
+        console.warn("Supabase update failed; switching to local.", e);
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+      }
+    }
+
+    const next = todos.map((t) => (t.id === id ? { ...t, title: newTitle } : t));
+    setTodos(next);
+    saveLocal(next);
   }
 
   async function deleteTodo(id) {
-    const { error } = await supabase.from("todos").delete().eq("id", id);
-    if (!error) fetchTodos();
+    if (mode === "supabase" && user?.id) {
+      try {
+        const { error } = await supabase.from("todos").delete().eq("id", id);
+        if (error) throw error;
+        fetchTodos();
+        return;
+      } catch (e) {
+        console.warn("Supabase delete failed; switching to local.", e);
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+      }
+    }
+
+    const next = todos.filter((t) => t.id !== id);
+    setTodos(next);
+    saveLocal(next);
   }
 
   async function updateStatus(id, newStatus) {
-    const { error } = await supabase
-      .from("todos")
-      .update({ status: newStatus })
-      .eq("id", id);
-    if (!error) fetchTodos();
+    if (mode === "supabase" && user?.id) {
+      try {
+        const { error } = await supabase.from("todos").update({ status: newStatus }).eq("id", id);
+        if (error) throw error;
+        fetchTodos();
+        return;
+      } catch (e) {
+        console.warn("Supabase status update failed; switching to local.", e);
+        setMode("local");
+        setCloudWarning("Cloud sync unavailable — using local mode.");
+      }
+    }
+
+    const next = todos.map((t) => (t.id === id ? { ...t, status: newStatus } : t));
+    setTodos(next);
+    saveLocal(next);
   }
 
-  //GATOR CONFETTI curtesy of chatgpt
+  // GATOR CONFETTI
   function gatorBurst(x, y) {
-    const count = 10; // number of gators
+    const count = 10;
     for (let i = 0; i < count; i++) {
       const span = document.createElement("span");
       span.textContent = "🐊";
       span.className = "gator-burst";
-      // start at click point
       span.style.left = x + "px";
       span.style.top = y + "px";
-      // random scatter
       const angle = Math.random() * Math.PI * 2;
-      const distance = 40 + Math.random() * 35; // px
+      const distance = 40 + Math.random() * 35;
       const tx = Math.cos(angle) * distance;
-      const ty = Math.sin(angle) * distance * -1; // bias upward a bit
+      const ty = Math.sin(angle) * distance * -1;
       const rot = Math.random() * 90 - 45 + "deg";
       span.style.setProperty("--tx", `${tx}px`);
       span.style.setProperty("--ty", `${ty}px`);
@@ -88,22 +215,36 @@ export default function YourTodoApp({ user }) {
       span.addEventListener("animationend", () => span.remove());
     }
   }
+
   function handleCelebrateFromEvent(e) {
     gatorBurst(e.clientX, e.clientY);
   }
-  //GATOR CONFETTI
+  // GATOR CONFETTI
 
   return (
     <div className="container">
-      <div className="signOutButton">
-        <button
-          onClick={() => supabase.auth.signOut()}
-          className="signOut"
-          title="Sign out"
-        >
-          Sign out
-        </button>
+      {/* Top bar */}
+      <div className="signOutButton" style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+        {!user ? (
+          <button onClick={onOpenAuth} className="signOut" title="Sign in">
+            Sign in
+          </button>
+        ) : (
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="signOut"
+            title="Sign out"
+          >
+            Sign out
+          </button>
+        )}
       </div>
+
+      {cloudWarning && (
+        <p className="login-message" style={{ marginTop: 6 }}>
+          {cloudWarning}
+        </p>
+      )}
 
       <div className="border"></div>
       <Header now={now} />
@@ -149,7 +290,6 @@ export default function YourTodoApp({ user }) {
       />
 
       <Footer />
-      
     </div>
   );
 }

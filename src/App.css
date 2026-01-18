@@ -101,7 +101,7 @@ input {
 
 .emailForm {
   display: flex;
-  gap: 8;
+  gap: 8px;
   align-items: center;
 }
 
@@ -243,8 +243,6 @@ button.delete {
   font-size: 1rem;
   font-weight: bold;
   color: #442c8b;
-  background-color: #dcae27;
-  padding: 3rem;
 
   display: block;
   justify-content: center;
@@ -281,4 +279,66 @@ button.delete {
   font-size: 18px;
   animation: gator-pop 1500ms ease-out forwards;
   will-change: transform, opacity;
+}
+
+/* Modal (Sign in) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 10000;
+}
+
+.modal-card {
+  width: min(640px, 100%);
+  background: #f6f0d6; /* match page fog */
+  border: 2px solid #b1a5d0; /* light purple */
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.modal-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-title {
+  margin: 0;
+  color: #442c8b;
+  font-size: 2rem;
+}
+
+.modal-divider {
+  border-bottom: 3px solid #dcae27; /* match .border */
+  padding-bottom: 0.3rem;
+  margin: 0.75rem 0 1rem 0;
+}
+
+.modal-close {
+  background: transparent;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  color: #442c8b;
+}
+
+.modal-close:hover {
+  background: rgba(68, 44, 139, 0.08);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content .login-message {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
 }
