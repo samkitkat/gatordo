@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- gatordodo -->
@@ -6,6 +6,20 @@
     <link rel="icon" type="image/svg+xml" href="/src/assets/gator.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gator Todos</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-SJR98JMT61"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-SJR98JMT61");
+    </script>
   </head>
   <body>
     <div id="root"></div>
@@ -14,5 +28,5 @@
 </html>
 
 <script>
-  console.log("hello professor!")
+  console.log("hello professor!");
 </script>
