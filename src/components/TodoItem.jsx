@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { FaCheck, FaPen, FaTrash, FaUndo } from "react-icons/fa";
 
+function formatDateTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+
 export default function TodoItem({
   todo,
   onUpdate,
@@ -18,8 +25,16 @@ export default function TodoItem({
     setIsEditing(false);
   };
 
+  const tooltipLines = [
+    todo.created_at ? `Added: ${formatDateTime(todo.created_at)}` : null,
+    todo.status === "completed" && todo.completed_at
+      ? `Completed: ${formatDateTime(todo.completed_at)}`
+      : null,
+  ].filter(Boolean);
+
   return (
-    <div className={`todo-item todo-${todo.status.replace(" ", "-")}`}>
+    <div className={`todo-item todo-${todo.status.replace(" ", "-")}`}
+    title={tooltipLines.join("\n")}>
       {isEditing ? (
         <input
           className="edit-input"

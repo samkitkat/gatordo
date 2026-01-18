@@ -6,8 +6,27 @@ import TodoList from "../components/TodoList";
 import { FaPlus } from "react-icons/fa";
 
 function safeUUID() {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  if (typeof crypto !== "undefined" && crypto.randomUUID)
+    return crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function formatDateTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+function sortByMostRecentCompleted(todos) {
+  return [...todos].sort((a, b) => {
+    const aTime = a.completed_at || a.created_at;
+    const bTime = b.completed_at || b.created_at;
+
+    return new Date(bTime) - new Date(aTime);
+  });
 }
 
 export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
@@ -18,6 +37,8 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   // "supabase" or "local"
   const [mode, setMode] = useState("local");
   const [cloudWarning, setCloudWarning] = useState("");
+
+  const [showCompleted, setShowCompleted] = useState(true);
 
   const storageKey = useMemo(() => {
     // Keep separate buckets so people can sign in later without losing guest todos
@@ -126,10 +147,20 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
       }
     }
 
+    const createdAt = new Date().toISOString();
+
     const next = [
       ...todos,
-      { id: safeUUID(), title, status: "incomplete", user_id: user?.id ?? null },
+      {
+        id: safeUUID(),
+        title,
+        status: "incomplete",
+        user_id: user?.id ?? null,
+        created_at: createdAt,
+        completed_at: null,
+      },
     ];
+
     setTodos(next);
     saveLocal(next);
     setTitle("");
@@ -138,7 +169,10 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   async function updateTodo(id, newTitle) {
     if (mode === "supabase" && user?.id) {
       try {
-        const { error } = await supabase.from("todos").update({ title: newTitle }).eq("id", id);
+        const { error } = await supabase
+          .from("todos")
+          .update({ title: newTitle })
+          .eq("id", id);
         if (error) throw error;
         fetchTodos();
         return;
@@ -149,7 +183,10 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
       }
     }
 
-    const next = todos.map((t) => (t.id === id ? { ...t, title: newTitle } : t));
+    const next = todos.map((t) =>
+      t.id === id ? { ...t, title: newTitle } : t
+    );
+
     setTodos(next);
     saveLocal(next);
   }
@@ -176,7 +213,15 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   async function updateStatus(id, newStatus) {
     if (mode === "supabase" && user?.id) {
       try {
-        const { error } = await supabase.from("todos").update({ status: newStatus }).eq("id", id);
+        const { error } = await supabase
+          .from("todos")
+          .update({
+            status: newStatus,
+            completed_at:
+              newStatus === "completed" ? new Date().toISOString() : null,
+          })
+          .eq("id", id);
+
         if (error) throw error;
         fetchTodos();
         return;
@@ -187,7 +232,17 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
       }
     }
 
-    const next = todos.map((t) => (t.id === id ? { ...t, status: newStatus } : t));
+    const next = todos.map((t) => {
+      if (t.id !== id) return t;
+
+      return {
+        ...t,
+        status: newStatus,
+        completed_at:
+          newStatus === "completed" ? new Date().toISOString() : null,
+      };
+    });
+
     setTodos(next);
     saveLocal(next);
   }
@@ -224,7 +279,10 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   return (
     <div className="container">
       {/* Top bar */}
-      <div className="signOutButton" style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+      <div
+        className="signOutButton"
+        style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}
+      >
         {!user ? (
           <button onClick={onOpenAuth} className="signOut" title="Sign in">
             Sign in
@@ -280,14 +338,33 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         onStatusChange={updateStatus}
         onCelebrate={handleCelebrateFromEvent}
       />
-      <TodoList
-        title="✅ completed"
-        todos={todos.filter((t) => t.status === "completed")}
-        onUpdate={updateTodo}
-        onDelete={deleteTodo}
-        onStatusChange={updateStatus}
-        onCelebrate={handleCelebrateFromEvent}
-      />
+
+      <h3
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+        onClick={() => setShowCompleted((v) => !v)}
+        title={showCompleted ? "Hide completed" : "Show completed"}
+      >
+        ✅ completed
+        <span aria-hidden="true">{showCompleted ? "▾" : "▸"}</span>
+      </h3>
+
+      {showCompleted && (
+        <TodoList
+          title=""
+          todos={sortByMostRecentCompleted(
+            todos.filter((t) => t.status === "completed")
+          )}
+          onUpdate={updateTodo}
+          onDelete={deleteTodo}
+          onStatusChange={updateStatus}
+          onCelebrate={handleCelebrateFromEvent}
+        />
+      )}
 
       <Footer />
     </div>
