@@ -1,5 +1,11 @@
 import React from "react";
-import { FaGithub } from "react-icons/fa";
+
+const TOOLS = [
+  { name: "Vite", href: "https://vitejs.dev" },
+  { name: "React", href: "https://react.dev" },
+  { name: "Supabase", href: "https://supabase.com" },
+  { name: "Netlify", href: "https://www.netlify.com" },
+];
 
 export default function Footer() {
   return (
@@ -7,20 +13,29 @@ export default function Footer() {
       <div className="border"></div>
 
       <footer className="footer">
-        <p>
-          created using vite, react, & supabase. deployed with netlify.
+        <p className="footer-line">
+          built with{" "}
+          {TOOLS.map((tool, i) => (
+            <span key={tool.name}>
+              <a href={tool.href} target="_blank" rel="noopener noreferrer">
+                {tool.name}
+              </a>
+              {i < TOOLS.length - 1 && " · "}
+            </span>
+          ))}
         </p>
-        <a
-          href="https://github.com/samkitkat/gatordo"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="github-link"
-          title="View on GitHub"
-        >
-          <FaGithub />
-        </a>
+
+        <p className="footer-line">
+          view the project on{" "}
+          <a
+            href="https://github.com/samkitkat/gatordo"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </p>
       </footer>
-      
     </div>
   );
 }

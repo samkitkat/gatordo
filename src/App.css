@@ -250,12 +250,23 @@ button.delete {
   text-align: center;
 }
 
-.footer .github-link {
-  margin-left: 0.5rem;
-  font-size: 1.2rem;
+.footer a {
   color: #442c8b;
-  text-decoration: none;
+  text-decoration: underline;
+  font-weight: 600;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
+
+.footer a:hover {
+  color: #005755; /* forest green */
+}
+
+.footer a:focus-visible {
+  outline: 2px solid #79c9ae;
+  outline-offset: 2px;
+}
+
 
 /* 🐊 burst animation */
 @keyframes gator-pop {
