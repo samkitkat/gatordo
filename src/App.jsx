@@ -30,8 +30,8 @@ export default function App() {
 
         subscription = listener.subscription;
       } catch (e) {
-        // If Supabase is down/paused/misconfigured, we still want the app to load in guest mode
-        console.warn("Supabase auth unavailable; continuing in guest mode.", e);
+        // If Supabase is down/paused/misconfigured, we still want the app to load in local mode
+        console.warn("Supabase auth unavailable; continuing in local mode.", e);
       }
     })();
 

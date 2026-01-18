@@ -280,23 +280,29 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
     <div className="container">
       {/* Top bar */}
       <div
-        className="signOutButton"
-        style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}
+  className="signOutButton"
+  style={{ display: "flex", justifyContent: "flex-end" }}
+>
+  {!user ? (
+    <button onClick={onOpenAuth} className="signOut" title="Sign in">
+      Sign in
+    </button>
+  ) : (
+    <div className="userGreeting">
+      <span>
+        <strong>hello, {user.email} | </strong>
+      </span>
+      <button
+        onClick={() => supabase.auth.signOut()}
+        className="signOutLink"
+        title="Sign out"
       >
-        {!user ? (
-          <button onClick={onOpenAuth} className="signOut" title="Sign in">
-            Sign in
-          </button>
-        ) : (
-          <button
-            onClick={() => supabase.auth.signOut()}
-            className="signOut"
-            title="Sign out"
-          >
-            Sign out
-          </button>
-        )}
-      </div>
+        <strong>sign out</strong>
+      </button>
+    </div>
+  )}
+</div>
+
 
       {cloudWarning && (
         <p className="login-message" style={{ marginTop: 6 }}>

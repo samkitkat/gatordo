@@ -2,29 +2,29 @@
   Colors and fonts based on SFSU brand guidelines.
 
   Primary Colors:
-    Core Purple: #442C8B
-    Purple #2: #665AA7
-    Purple #3: #B1A5D0
-    Core Gold: #DCAE27
-    Gold #2: #FFD24f
-    Gold #3: #FFEC82
+    Core Purple: #442c8b
+    Purple #2: #665aa7
+    Purple #3: #b1a5d0
+    Core Gold: #dcae27
+    Gold #2: #ffd24f
+    Gold #3: #ffec82
 
   Secondary Colors:
-    Ocean: #044361, Forest: #005755, Bridge: #CC4D35, Sunset: #EB8923, Rock: #6E5D53,
-    Sky: #70B3D7, Eucalyptus: #79C9AE, Stucco: #FAC4Cb, Sunlight: #FFE2B4, Fog: #F6F0D6, 
+    Ocean: #044361, Forest: #005755, Bridge: #cc4d35, Sunset: #eb8923, Rock: #6e5d53,
+    Sky: #70b3d7, Eucalyptus: #79c9ae, Stucco: #fac4cb, Sunlight: #ffe2b4, Fog: #f6f0d6,
     Black: #000000
 
   Typeface:
-    Secondary Typeface: Source Sans 3
+    Source Sans 3
 */
 
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
   font-family: "Source Sans 3", sans-serif;
   background-color: #f6f0d6;
-  color: #000000;
+  color: #000;
   line-height: 1.6;
 }
 
@@ -35,6 +35,7 @@ body {
   padding: 0 1rem;
 }
 
+/* Headings */
 h1,
 h2 {
   color: #442c8b;
@@ -45,12 +46,20 @@ h1 {
   font-size: 2.5rem;
 }
 
+h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  color: #665aa7;
+}
+
+/* Divider */
 .border {
   border-bottom: 3px solid #dcae27;
   padding-bottom: 0.3rem;
-  margin: 1rem 0 1rem 0;
+  margin: 1rem 0;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -78,12 +87,7 @@ h1 {
   color: #442c8b;
 }
 
-h3 {
-  font-size: 1.2rem;
-  margin-top: 1.5rem;
-  color: #665aa7;
-}
-
+/* Inputs + forms */
 input {
   padding: 0.5rem 0.75rem;
   border: 2px solid #b1a5d0;
@@ -105,36 +109,28 @@ input {
   align-items: center;
 }
 
+.edit-input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 2px solid #b1a5d0;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Messages */
 .login-message {
-  background-color: #FFEC82;
+  background-color: #ffec82;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
 }
 
-.guestLogin {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-button.signIn {
-  background-color: #442c8b;
-  color: #fff;
-  width: 145px;
-  margin-left: 10px;
-}
-
+/* Auth / top-right */
 .signOutButton {
   display: flex;
   justify-content: flex-end;
 }
 
-button.signOut {
-  background-color: #442c8b;
-  color: #fff;
-  width: 145px;
-  justify-content: center;
-}
-
+/* Buttons (base) */
 button {
   display: inline-flex;
   align-items: center;
@@ -153,17 +149,6 @@ button svg {
   font-size: 1.1rem;
 }
 
-.todo-item > div {
-  display: flex;
-  gap: 0.3rem;
-}
-
-.todo-item > .actions {
-  display: flex;
-  gap: 0.3rem;
-}
-
-/* Button variants */
 button:hover {
   opacity: 0.9;
 }
@@ -172,6 +157,19 @@ button:active {
   transform: scale(0.97);
 }
 
+/* Bigger auth buttons (Sign in / Send Magic Link) */
+button.signIn,
+button.signOut {
+  background-color: #442c8b;
+  color: #fff;
+  width: 145px;
+}
+
+button.signIn {
+  margin-left: 10px;
+}
+
+/* Button variants */
 button.add {
   background-color: #442c8b;
   color: #fff;
@@ -197,7 +195,7 @@ button.delete {
   color: #fff;
 }
 
-/* Todo item styling */
+/* Todos */
 .todo-item {
   display: flex;
   align-items: center;
@@ -215,6 +213,11 @@ button.delete {
   flex: 1;
 }
 
+.todo-item .actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
 /* Status-based accents */
 .todo-incomplete {
   border-left-color: #dcae27;
@@ -230,23 +233,12 @@ button.delete {
   color: #6e5d53;
 }
 
-.edit-input {
-  flex: 1;
-  padding: 0.4rem 0.6rem;
-  border: 2px solid #b1a5d0; /* light purple border */
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
+/* Footer */
 .footer {
   margin-top: auto;
   font-size: 1rem;
   font-weight: bold;
   color: #442c8b;
-
-  display: block;
-  justify-content: center;
-  align-items: flex-end;
   text-align: center;
 }
 
@@ -254,19 +246,17 @@ button.delete {
   color: #442c8b;
   text-decoration: underline;
   font-weight: 600;
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
+  margin: 0 0.25rem;
 }
 
 .footer a:hover {
-  color: #005755; /* forest green */
+  color: #005755;
 }
 
 .footer a:focus-visible {
   outline: 2px solid #79c9ae;
   outline-offset: 2px;
 }
-
 
 /* 🐊 burst animation */
 @keyframes gator-pop {
@@ -306,8 +296,8 @@ button.delete {
 
 .modal-card {
   width: min(640px, 100%);
-  background: #f6f0d6; /* match page fog */
-  border: 2px solid #b1a5d0; /* light purple */
+  background: #f6f0d6;
+  border: 2px solid #b1a5d0;
   border-radius: 10px;
   padding: 1rem;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
@@ -328,16 +318,13 @@ button.delete {
 }
 
 .modal-divider {
-  border-bottom: 3px solid #dcae27; /* match .border */
+  border-bottom: 3px solid #dcae27;
   padding-bottom: 0.3rem;
-  margin: 0.75rem 0 1rem 0;
+  margin: 0.75rem 0 1rem;
 }
 
 .modal-close {
   background: transparent;
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
   color: #442c8b;
 }
 
@@ -349,7 +336,35 @@ button.delete {
   margin-top: 0;
 }
 
-.modal-content .login-message {
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+/* Logged-in greeting */
+.userGreeting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #442c8b;
+}
+
+.userGreeting strong {
+  font-weight: 600;
+}
+
+.userDivider {
+  opacity: 0.6;
+}
+
+.signOutLink {
+  background: none;
+  border: none;
+  padding: 0;
+  height: auto;
+  width: auto;
+  color: #442c8b;
+  text-decoration: underline;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.signOutLink:hover {
+  color: #005755;
 }
