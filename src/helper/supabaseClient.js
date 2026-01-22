@@ -2,9 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
 let supabase = null;
-
 if (supabaseUrl && supabaseAnonKey) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 } else {
@@ -12,7 +10,6 @@ if (supabaseUrl && supabaseAnonKey) {
     "Supabase env vars missing. Running in local-only (guest) mode."
   );
 
-  // Minimal mock so imports don't crash
   supabase = {
     auth: {
       getSession: async () => ({ data: { session: null } }),
@@ -25,7 +22,10 @@ if (supabaseUrl && supabaseAnonKey) {
       signOut: async () => {},
     },
     from: () => ({
-      select: async () => ({ data: null, error: new Error("Supabase unavailable") }),
+      select: async () => ({
+        data: null,
+        error: new Error("Supabase unavailable"),
+      }),
       insert: async () => ({ error: new Error("Supabase unavailable") }),
       update: async () => ({ error: new Error("Supabase unavailable") }),
       delete: async () => ({ error: new Error("Supabase unavailable") }),
@@ -38,5 +38,4 @@ if (supabaseUrl && supabaseAnonKey) {
     }),
   };
 }
-
 export default supabase;

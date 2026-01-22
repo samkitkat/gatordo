@@ -4,20 +4,14 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TodoList from "../components/TodoList";
 import { FaPlus } from "react-icons/fa";
+import useTheme from "../hooks/useTheme";
+import useConfetti from "../hooks/useConfetti";
+import { Link } from "react-router-dom";
 
 function safeUUID() {
   if (typeof crypto !== "undefined" && crypto.randomUUID)
     return crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function formatDateTime(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
 }
 
 function sortByMostRecentCompleted(todos) {
@@ -33,6 +27,8 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [now, setNow] = useState(new Date());
+
+  const { celebrateFromEvent } = useConfetti();
 
   // "supabase" or "local"
   const [mode, setMode] = useState("local");
@@ -90,7 +86,6 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         loadLocal();
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, storageKey]);
 
   async function tryFetchFromSupabase() {
@@ -143,7 +138,6 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         console.warn("Supabase add failed; switching to local.", e);
         setMode("local");
         setCloudWarning("Cloud sync unavailable — using local mode.");
-        // fall through to local add
       }
     }
 
@@ -247,62 +241,45 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
     saveLocal(next);
   }
 
-  // GATOR CONFETTI
-  function gatorBurst(x, y) {
-    const count = 10;
-    for (let i = 0; i < count; i++) {
-      const span = document.createElement("span");
-      span.textContent = "🐊";
-      span.className = "gator-burst";
-      span.style.left = x + "px";
-      span.style.top = y + "px";
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 40 + Math.random() * 35;
-      const tx = Math.cos(angle) * distance;
-      const ty = Math.sin(angle) * distance * -1;
-      const rot = Math.random() * 90 - 45 + "deg";
-      span.style.setProperty("--tx", `${tx}px`);
-      span.style.setProperty("--ty", `${ty}px`);
-      span.style.setProperty("--rot", rot);
-      span.style.fontSize = 16 + Math.floor(Math.random() * 10) + "px";
-
-      document.body.appendChild(span);
-      span.addEventListener("animationend", () => span.remove());
-    }
-  }
-
-  function handleCelebrateFromEvent(e) {
-    gatorBurst(e.clientX, e.clientY);
-  }
-  // GATOR CONFETTI
+  const { toggleTheme, isY2K } = useTheme();
 
   return (
     <div className="container">
       {/* Top bar */}
-      <div
-  className="signOutButton"
-  style={{ display: "flex", justifyContent: "flex-end" }}
->
-  {!user ? (
-    <button onClick={onOpenAuth} className="signOut" title="Sign in">
-      Sign in
-    </button>
-  ) : (
-    <div className="userGreeting">
-      <span>
-        <strong>hello, {user.email} | </strong>
-      </span>
-      <button
-        onClick={() => supabase.auth.signOut()}
-        className="signOutLink"
-        title="Sign out"
-      >
-        <strong>sign out</strong>
-      </button>
-    </div>
-  )}
-</div>
 
+      <div
+        className="signOutButton"
+        style={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        {!user ? (
+          <button onClick={onOpenAuth} className="signOut" title="Sign in">
+            Sign in
+          </button>
+        ) : (
+          <div className="userGreeting">
+            <span>
+              <strong>hello, {user.email} | </strong>
+            </span>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="signOutLink"
+              title="Sign out"
+            >
+              sign out
+            </button>
+          </div>
+        )}
+
+        <button
+          className="themeButton"
+          onClick={toggleTheme}
+          title="Toggle theme"
+          aria-pressed={isY2K}
+          aria-label="Toggle theme"
+        >
+          🫧
+        </button>
+      </div>
 
       {cloudWarning && (
         <p className="login-message" style={{ marginTop: 6 }}>
@@ -310,7 +287,6 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         </p>
       )}
 
-      <div className="border"></div>
       <Header now={now} />
 
       <h3>✍🏼 todos</h3>
@@ -334,7 +310,7 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         onUpdate={updateTodo}
         onDelete={deleteTodo}
         onStatusChange={updateStatus}
-        onCelebrate={handleCelebrateFromEvent}
+        onCelebrate={celebrateFromEvent}
       />
       <TodoList
         title="⏳ in progress"
@@ -342,7 +318,7 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
         onUpdate={updateTodo}
         onDelete={deleteTodo}
         onStatusChange={updateStatus}
-        onCelebrate={handleCelebrateFromEvent}
+        onCelebrate={celebrateFromEvent}
       />
 
       <h3
@@ -368,9 +344,13 @@ export default function YourTodoApp({ user, onOpenAuth, onCloseAuth }) {
           onUpdate={updateTodo}
           onDelete={deleteTodo}
           onStatusChange={updateStatus}
-          onCelebrate={handleCelebrateFromEvent}
+          onCelebrate={celebrateFromEvent}
         />
       )}
+
+      <Link className="signOutLink" to="/archive" title="View archive">
+        Todos Archive
+      </Link>
 
       <Footer />
     </div>

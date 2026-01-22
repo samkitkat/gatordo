@@ -25,7 +25,7 @@ function MagicLinkForm({ onClose }) {
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/welcome` },
+        options: { emailRedirectTo: window.location.origin },
       });
 
       setMessage(
@@ -39,7 +39,6 @@ function MagicLinkForm({ onClose }) {
   }
 
   function onBackdropClick(e) {
-    // close only if they clicked the backdrop, not the modal card
     if (e.target === e.currentTarget) onClose?.();
   }
 
@@ -53,10 +52,9 @@ function MagicLinkForm({ onClose }) {
         tabIndex={-1}
         ref={modalRef}
       >
-  
         <div className="modal-content">
           <h3>Sign in with Email</h3>
-  
+
           <form onSubmit={handleLogin} className="emailForm">
             <input
               type="email"
@@ -69,13 +67,12 @@ function MagicLinkForm({ onClose }) {
               Send Magic Link
             </button>
           </form>
-  
+
           {message && <p className="login-message">{message}</p>}
-  
         </div>
       </div>
     </div>
-  );  
+  );
 }
 
 export default MagicLinkForm;
